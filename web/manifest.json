@@ -1,0 +1,35 @@
+{
+    "name": "vegifresh",
+    "short_name": "vegifresh",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0175C2",
+    "theme_color": "#0175C2",
+    "description": "Welcome to VegiFresh, your ultimate destination for the freshest and most exotic vegetables. We source directly from local farms, ensuring that every vegetable reaches your doorstep with unbeatable freshness and quality. With VegiFresh, you can discover a wide variety of unique and rare vegetables that are not easily found in traditional grocery stores. Experience the farm-to-table journey like never before and elevate your culinary adventures with our hand-picked selection. Say goodbye to long grocery store lines and let VegiFresh bring the farm-fresh goodness straight to your home. Download the app now and embark on a flavorful and healthy journey with VegiFresh!",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
+import 'package:vegifresh/constant/constsS.dart';
 import 'package:vegifresh/utility/Utility.dart';
 import 'package:vegifresh/widget/feedsWidget.dart';
 
+import '../../model/productsModel.dart';
+import '../../provider/productProvider.dart';
 import '../../widget/textWidget.dart';
 
 class FeedsScreen extends StatefulWidget {
@@ -25,17 +29,17 @@ class _FeedsScreenState extends State<FeedsScreen> {
 
   @override
   void initState() {
-    // final productsProvider = Provider.of<ProductsProvider>(context, listen: false);
+    //final productsProvider = Provider.of<ProductsProvider>(context, listen: false);
     // productsProvider.fetchProducts();
     super.initState();
   }
-  // List<ProductModel> listProdcutSearch = [];
+  //List<ProductModel> allProducts= [];
   @override
   Widget build(BuildContext context) {
     final Color color = Utility(context).color;
     Size size = Utility(context).getScreenSize;
-    // final productsProvider = Provider.of<ProductsProvider>(context);
-    // List<ProductModel> allProducts = productsProvider.getProducts;
+    final productsProvider = Provider.of<ProductsProvider>(context);
+    List<ProductModel> allProducts = productsProvider.getProducts;
     return Scaffold(
       appBar: AppBar(
         // leading: const BackWidget(),
@@ -112,8 +116,11 @@ class _FeedsScreenState extends State<FeedsScreen> {
             //     child: const FeedsWidget(),
             //   );
             // }),
-            children: List.generate(4, (index) {
-              return FeedsWidget();
+            children: List.generate(allProducts.length, (index) {
+              return ChangeNotifierProvider.value(
+                value: allProducts[index],
+                child: FeedsWidget(),
+              );
             }),
           ),
         ]),

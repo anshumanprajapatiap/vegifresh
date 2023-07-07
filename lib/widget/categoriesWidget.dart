@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/darkThemeProvider.dart';
+import '../screen/innerScreen/categoryScreen.dart';
 
 class CategoriesWidget extends StatelessWidget {
   const CategoriesWidget(
@@ -20,8 +21,8 @@ class CategoriesWidget extends StatelessWidget {
     final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
     return InkWell(
       onTap: () {
-        // Navigator.pushNamed(context, CategoryScreen.routeName,
-        //     arguments: catText);
+        Navigator.pushNamed(context, CategoryScreen.routeName,
+            arguments: catText);
       },
       child: Container(
         // height: _screenWidth * 0.6,

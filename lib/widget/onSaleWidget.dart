@@ -15,6 +15,7 @@ import '../provider/wishlistProvider.dart';
 import '../screen/innerScreen/productDetailScreen.dart';
 import '../utility/Utility.dart';
 import '../utility/globalMethod.dart';
+import 'heartButtonWidget.dart';
 
 class OnSaleWidget extends StatefulWidget {
   const OnSaleWidget({Key? key}) : super(key: key);
@@ -27,13 +28,13 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
   @override
   Widget build(BuildContext context) {
     final Color color = Utility(context).color;
-    // final productModel = Provider.of<ProductModel>(context);
+    final productModel = Provider.of<ProductModel>(context);
     final theme = Utility(context).getTheme;
     Size size = Utility(context).getScreenSize;
-    // final cartProvider = Provider.of<CartProvider>(context);
-    // bool? _isInCart = cartProvider.getCartItems.containsKey(productModel.id);
-    // final wishlistProvider = Provider.of<WishlistProvider>(context);
-    // bool? _isInWishlist = wishlistProvider.getWishlistItems.containsKey(productModel.id);
+    final cartProvider = Provider.of<CartProvider>(context);
+    bool? _isInCart = cartProvider.getCartItems.containsKey(productModel.id);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    bool? _isInWishlist = wishlistProvider.getWishlistItems.containsKey(productModel.id);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -43,10 +44,8 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: () {
-            // Navigator.pushNamed(context, ProductDetails.routeName,
-            //     arguments: productModel.id);
-            GlobalMethods.navigateTo(
-                ctx: context, routeName: ProductDetailScreen.routeName);
+            Navigator.pushNamed(context, ProductDetailScreen.routeName,
+                arguments: productModel.id);
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -57,22 +56,15 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       FancyShimmerImage(
-                        imageUrl: 'https://static.libertyprim.com/files/familles/pomme-large.jpg?1569271834',
+                        imageUrl: productModel.imageUrl,
                         height: size.width * 0.22,
                         width: size.width * 0.22,
                         boxFit: BoxFit.fill,
                       ),
-                      // Image.network(
-                      //   'https://static.libertyprim.com/files/familles/pomme-large.jpg?1569271834',
-                      //     height: size.width * 0.22,
-                      //     width: size.width * 0.22,
-                      //     fit: BoxFit.fill,
-                      // ),
                       Column(
                         children: [
                           TextWidget(
-                            //text: 'productModel.isPiece' ? '1Piece' : '1KG',
-                            text: '1KG',
+                            text: productModel.isPiece ? '1Piece' : '1KG',
                             color: color,
                             textSize: 22,
                             isTitle: true,
@@ -83,7 +75,13 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                           Row(
                             children: [
                               GestureDetector(
-                                onTap: (){},
+                                onTap: _isInCart
+                                      ? null :
+                                      () {
+                                          cartProvider.addProductsToCart(
+                                          productId: productModel.id,
+                                          quantity: 1);
+                                      },
                                 // onTap: _isInCart
                                 //     ? null
                                 //     : () async {
@@ -107,29 +105,23 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                                   //     quantity: 1);
                                 // },
                                 child: Icon(
-                                  IconlyLight.bag2,
-                                  // _isInCart
-                                  //     ? IconlyBold.bag2
-                                  //     : IconlyLight.bag2,
+                                  _isInCart
+                                      ? IconlyBold.bag2
+                                      : IconlyLight.bag2,
                                   size: 22,
                                   //color: _isInCart ? Colors.green : color,
                                   color: color,
                                 ),
                               ),
-                              // HeartBTN(
-                              //   productId: productModel.id,
-                              //   isInWishlist: _isInWishlist,
-                              // )
+                              //
                               GestureDetector(
                                 onTap: (){
                                   print('heart');
                                 },
-                                child: Icon(
-                                  IconlyLight.heart,
-                                  size: 22,
-                                  //color: _isInCart ? Colors.green : color,
-                                  color: color,
-                                ),
+                                child: HeartBTN(
+                                    productId: productModel.id,
+                                    isInWishlist: _isInWishlist,
+                                  ),
                               ),
                           ],
                           ),
@@ -138,16 +130,14 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                     ],
                   ),
                   PriceWidget(
-                    //salePrice: productModel.salePrice,
-                    //price: productModel.price,
-                    salePrice: 100,
-                    price: 120,
+                    salePrice: productModel.salePrice,
+                    price: productModel.price,
                     textPrice: '1',
-                    isOnSale: true,
+                    isOnSale: productModel.isOnSale,
                   ),
                   const SizedBox(height: 5),
                   TextWidget(
-                    text: 'productModel.title',
+                    text: productModel.title,
                     color: color,
                     textSize: 16,
                     isTitle: true,

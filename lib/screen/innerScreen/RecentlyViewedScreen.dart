@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 import 'package:vegifresh/utility/Utility.dart';
+import 'package:vegifresh/widget/emptyScreenWidget.dart';
 
-import '../utility/globalMethod.dart';
-import '../widget/backWidget.dart';
-import '../widget/recentlyViewedWidget.dart';
-import '../widget/textWidget.dart';
+import '../../provider/viewedProductProvider.dart';
+import '../../utility/globalMethod.dart';
+import '../../widget/backWidget.dart';
+import '../../widget/recentlyViewedWidget.dart';
+import '../../widget/textWidget.dart';
 
 class RecentlyViewedScreen extends StatefulWidget {
   static const routeName = '/ViewedRecentlyScreen';
@@ -22,23 +25,18 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
   Widget build(BuildContext context) {
     Color color = Utility(context).color;
 
-    // Size size = Utils(context).getScreenSize;
-    // final viewedProdProvider = Provider.of<ViewedProdProvider>(context);
-    // final viewedProdItemsList = viewedProdProvider.getViewedProdlistItems.values
-    //     .toList()
-    //     .reversed
-    //     .toList();
-    if (false) {
-      // return const EmptyScreen(
-      //   title: 'Your history is empty',
-      //   subtitle: 'No products has been viewed yet!',
-      //   buttonText: 'Shop now',
-      //   imagePath: 'assets/images/history.png',
-      // );
-    } else {
-      return Scaffold(
+    Size size = Utility(context).getScreenSize;
+    final viewedProdProvider = Provider.of<ViewedProdProvider>(context);
+    final viewedProdItemsList = viewedProdProvider.getViewedProdlistItems.values
+        .toList()
+        .reversed
+        .toList();
+
+    return Scaffold(
         appBar: AppBar(
+
           actions: [
+            viewedProdItemsList.isNotEmpty?
             IconButton(
               onPressed: () {
                 GlobalMethods.warningDialog(
@@ -52,6 +50,7 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
                 color: color,
               ),
             )
+            : Text('')
           ],
           leading: const BackWidget(),
           automaticallyImplyLeading: false,
@@ -65,15 +64,25 @@ class _RecentlyViewedScreenState extends State<RecentlyViewedScreen> {
           backgroundColor:
           Theme.of(context).scaffoldBackgroundColor.withOpacity(0.9),
         ),
-        body: ListView.builder(
-            itemCount: 4,
-            itemBuilder: (ctx, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
-                child: RecentlyViewedWidget(),
-              );
-            }),
+
+        body: viewedProdItemsList.isEmpty
+            ? const EmptyScreenWidget(
+                title: 'Your history is empty',
+                subtitle: 'No products has been viewed yet!',
+                buttonText: 'Shop now',
+                imagePath: 'assets/images/history.png',
+              )
+            : ListView.builder(
+              itemCount: viewedProdItemsList.length,
+              itemBuilder: (ctx, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
+                  child: ChangeNotifierProvider.value(
+                    value: viewedProdItemsList[index],
+                      child: RecentlyViewedWidget()
+                  ),
+                );
+              }),
       );
-    }
   }
 }

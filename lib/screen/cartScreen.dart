@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 import 'package:vegifresh/utility/Utility.dart';
 import 'package:vegifresh/widget/cartWidget.dart';
 import 'package:vegifresh/widget/emptyScreenWidget.dart';
 
+import '../provider/cartProvider.dart';
 import '../utility/globalMethod.dart';
 import '../widget/textWidget.dart';
 
@@ -15,13 +17,13 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Utility(context).color;
     Size size = Utility(context).getScreenSize;
-    // final cartProvider = Provider.of<CartProvider>(context);
-    // final cartItemsList =
-    // cartProvider.getCartItems.values
-    //     .toList()
-    //     .reversed
-    //     .toList();
-    return false
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItemsList =
+    cartProvider.getCartItems.values
+        .toList()
+        .reversed
+        .toList();
+    return cartItemsList.isEmpty
         ? const EmptyScreenWidget(
       title: 'Your cart is empty',
       subtitle: 'Add something and make me happy :)',
@@ -35,7 +37,7 @@ class CartScreen extends StatelessWidget {
               .of(context)
               .scaffoldBackgroundColor,
           title: TextWidget(
-            text: 'Cart (10)',
+            text: 'Cart (${cartItemsList.length})',
             color: color,
             isTitle: true,
             textSize: 22,
@@ -47,8 +49,8 @@ class CartScreen extends StatelessWidget {
                     title: 'Empty your cart?',
                     subtitle: 'Are you sure?',
                     fct: () async {
-                      // await cartProvider.clearOnlineCart();
-                      // cartProvider.clearLocalCart();
+                      //await cartProvider.clearOnlineCart();
+                      cartProvider.clearLocalCart();
                     },
                     context: context);
               },
@@ -62,20 +64,14 @@ class CartScreen extends StatelessWidget {
         children: [
           _checkout(ctx: context),
           Expanded(
-            // child: ListView.builder(
-            //   itemCount: cartItemsList.length,
-            //   itemBuilder: (ctx, index) {
-            //     return ChangeNotifierProvider.value(
-            //         value: cartItemsList[index],
-            //         child: CartWidget(
-            //           q: cartItemsList[index].quantity,
-            //         ));
-            //   },
-            // ),
             child: ListView.builder(
-              itemCount: 6,
+              itemCount: cartItemsList.length,
               itemBuilder: (ctx, index) {
-                return CartWidget(q: 1);
+                return ChangeNotifierProvider.value(
+                    value: cartItemsList[index],
+                    child: CartWidget(
+                      q: cartItemsList[index].quantity,
+                    ));
               },
             ),
           ),
@@ -83,6 +79,7 @@ class CartScreen extends StatelessWidget {
       ),
     );
   }
+
   Widget _checkout({required BuildContext ctx}) {
     final Color color = Utility(ctx).color;
     Size size = Utility(ctx).getScreenSize;
@@ -173,4 +170,5 @@ class CartScreen extends StatelessWidget {
       ),
     );
   }
+
 }

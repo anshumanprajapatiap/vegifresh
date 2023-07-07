@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 import 'package:vegifresh/screen/categoriesScreen.dart';
 import 'package:vegifresh/screen/homeScreen.dart';
 import 'package:vegifresh/screen/profileScreen.dart';
 
+import '../provider/cartProvider.dart';
 import '../widget/textWidget.dart';
 import 'cartScreen.dart';
 
@@ -31,6 +33,8 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItemsList = cartProvider.getCartItems.values.toList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -68,7 +72,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
                   position: badge.BadgePosition.topEnd(top: -7, end: -7),
                   badgeContent: FittedBox(
                       child: TextWidget(
-                          text: '2',
+                          text: cartItemsList.length.toString(),
                           color: Colors.white,
                           textSize: 15)),
                   child: Icon( _selectedIndex==2 ? Icons.shopping_cart: Icons.shopping_cart_outlined)

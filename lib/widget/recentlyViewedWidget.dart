@@ -3,10 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 import 'package:vegifresh/screen/innerScreen/productDetailScreen.dart';
 import 'package:vegifresh/utility/Utility.dart';
 import 'package:vegifresh/widget/textWidget.dart';
 
+import '../model/viewedModel.dart';
+import '../provider/cartProvider.dart';
+import '../provider/productProvider.dart';
 import '../utility/globalMethod.dart';
 
 
@@ -20,31 +24,31 @@ class RecentlyViewedWidget extends StatefulWidget {
 class _RecentlyViewedWidgetState extends State<RecentlyViewedWidget> {
   @override
   Widget build(BuildContext context) {
-    // final productProvider = Provider.of<ProductsProvider>(context);
+    final productProvider = Provider.of<ProductsProvider>(context);
 
-    // final viewedProdModel = Provider.of<ViewedProdModel>(context);
+    final viewedProdModel = Provider.of<ViewedProdModel>(context);
 
-    // final getCurrProduct = productProvider.findProdById(viewedProdModel.productId);
-    // double usedPrice = getCurrProduct.isOnSale
-    //     ? getCurrProduct.salePrice
-    //     : getCurrProduct.price;
-    // final cartProvider = Provider.of<CartProvider>(context);
-    // bool? _isInCart = cartProvider.getCartItems.containsKey(getCurrProduct.id);
+    final getCurrProduct = productProvider.findProdById(viewedProdModel.productId);
+    double usedPrice = getCurrProduct.isOnSale
+        ? getCurrProduct.salePrice
+        : getCurrProduct.price;
+    final cartProvider = Provider.of<CartProvider>(context);
+    bool? _isInCart = cartProvider.getCartItems.containsKey(getCurrProduct.id);
     Color color = Utility(context).color;
     Size size = Utility(context).getScreenSize;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          GlobalMethods.navigateTo(
-              ctx: context, routeName: ProductDetailScreen.routeName);
+          Navigator.pushNamed(context, ProductDetailScreen.routeName,
+              arguments: getCurrProduct.id);
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FancyShimmerImage(
-              imageUrl: 'getCurrProduct.imageUrl',
+              imageUrl: getCurrProduct.imageUrl,
               boxFit: BoxFit.fill,
               height: size.width * 0.27,
               width: size.width * 0.25,
@@ -55,7 +59,7 @@ class _RecentlyViewedWidgetState extends State<RecentlyViewedWidget> {
             Column(
               children: [
                 TextWidget(
-                  text: 'title',
+                  text: getCurrProduct.title,
                   color: color,
                   textSize: 24,
                   isTitle: true,
@@ -64,7 +68,7 @@ class _RecentlyViewedWidgetState extends State<RecentlyViewedWidget> {
                   height: 12,
                 ),
                 TextWidget(
-                  text: '\$20',
+                  text: usedPrice.toStringAsFixed(2),
                   color: color,
                   textSize: 20,
                   isTitle: false,
@@ -79,7 +83,14 @@ class _RecentlyViewedWidgetState extends State<RecentlyViewedWidget> {
                 color: Colors.green,
                 child: InkWell(
                     borderRadius: BorderRadius.circular(12),
-                    onTap: (){},
+                    onTap: _isInCart
+                      ? null
+                      : () async {
+                            cartProvider.addProductsToCart(
+                              productId: getCurrProduct.id,
+                              quantity: 1,
+                            );
+                        },
                     // onTap: _isInCart
                     //     ? null
                     //     : ()async {
@@ -103,7 +114,7 @@ class _RecentlyViewedWidgetState extends State<RecentlyViewedWidget> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Icon(
-                        IconlyBold.plus,
+                        _isInCart ? IconlyBold.tickSquare :IconlyBold.plus,
                         color: Colors.white,
                         size: 20,
                       ),

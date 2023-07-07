@@ -7,6 +7,10 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:vegifresh/utility/Utility.dart';
 
+import '../../provider/cartProvider.dart';
+import '../../provider/productProvider.dart';
+import '../../provider/viewedProductProvider.dart';
+import '../../provider/wishlistProvider.dart';
 import '../../widget/heartButtonWidget.dart';
 import '../../widget/textWidget.dart';
 
@@ -35,25 +39,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     Size size = Utility(context).getScreenSize;
     final Color color = Utility(context).color;
 
-    // final cartProvider = Provider.of<CartProvider>(context);
-    // final wishlistProvider = Provider.of<WishlistProvider>(context);
-    // final productId = ModalRoute.of(context)!.settings.arguments as String;
-    // final productProvider = Provider.of<ProductsProvider>(context);
-    // final getCurrProduct = productProvider.findProdById(productId);
-    //
-    // double usedPrice = getCurrProduct.isOnSale
-    //     ? getCurrProduct.salePrice
-    //     : getCurrProduct.price;
-    // double totalPrice = usedPrice * int.parse(_quantityTextController.text);
-    // bool? _isInCart = cartProvider.getCartItems.containsKey(getCurrProduct.id);
-    //
-    // bool? _isInWishlist =
-    // wishlistProvider.getWishlistItems.containsKey(getCurrProduct.id);
-    //
-    // final viewedProdProvider = Provider.of<ViewedProdProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
+    final productProvider = Provider.of<ProductsProvider>(context);
+    final getCurrProduct = productProvider.findProdById(productId);
+
+    double usedPrice = getCurrProduct.isOnSale
+        ? getCurrProduct.salePrice
+        : getCurrProduct.price;
+    double totalPrice = usedPrice * int.parse(_quantityTextController.text);
+    bool? _isInCart = cartProvider.getCartItems.containsKey(getCurrProduct.id);
+
+    bool? _isInWishlist = wishlistProvider.getWishlistItems.containsKey(getCurrProduct.id);
+
+    final viewedProdProvider = Provider.of<ViewedProdProvider>(context);
     return WillPopScope(
       onWillPop: () async {
-        // viewedProdProvider.addProductToHistory(productId: productId);
+        print('itemp added to history ');
+        viewedProdProvider.addProductToHistory(productId: productId);
         return true;
       },
       child: Scaffold(
@@ -74,7 +78,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           Flexible(
             flex: 2,
             child: FancyShimmerImage(
-              imageUrl: 'https://static.libertyprim.com/files/familles/pomme-large.jpg?1569271834',
+              imageUrl: getCurrProduct.imageUrl,
               boxFit: BoxFit.scaleDown,
               width: size.width,
               // height: screenHeight * .4,
@@ -101,15 +105,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       children: [
                         Flexible(
                           child: TextWidget(
-                            text: 'getCurrProduct.title',
+                            text: getCurrProduct.title,
                             color: color,
                             textSize: 25,
                             isTitle: true,
                           ),
                         ),
                         HeartBTN(
-                          productId: 'getCurrProduct.id',
-                          isInWishlist: false,
+                          productId: getCurrProduct.id,
+                          isInWishlist: _isInWishlist,
                         )
                       ],
                     ),
@@ -122,13 +126,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextWidget(
-                          text: '\$100',
+                          text: '${usedPrice.toStringAsFixed(2)}',
                           color: Colors.green,
                           textSize: 22,
                           isTitle: true,
                         ),
                         TextWidget(
-                          text: '/Kg',
+                          text: getCurrProduct.isPiece ? '/Piece' : '/KG',
                           color: color,
                           textSize: 12,
                           isTitle: false,
@@ -137,9 +141,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           width: 10,
                         ),
                         Visibility(
-                          visible: false,
+                          visible: getCurrProduct.isOnSale ? true : false,
                           child: Text(
-                            '\$2',
+                              '${getCurrProduct.price.toStringAsFixed(2)}',
                             style: TextStyle(
                                 fontSize: 15,
                                 color: color,
@@ -260,14 +264,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 child: Row(
                                   children: [
                                     TextWidget(
-                                      text:
-                                      '\$100/',
+                                      text: '${totalPrice.toStringAsFixed(2)}',
                                       color: color,
                                       textSize: 20,
                                       isTitle: true,
                                     ),
                                     TextWidget(
-                                      text: '${_quantityTextController.text}Kg',
+                                      text: getCurrProduct.isPiece ? '/${_quantityTextController.text}Piece' :'/${_quantityTextController.text}Kg',
                                       color: color,
                                       textSize: 16,
                                       isTitle: false,
@@ -286,7 +289,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(10),
                             child: InkWell(
-                              onTap: (){},
+                              onTap: _isInCart
+                                  ? null
+                                  : (){
+                                      cartProvider.addProductsToCart(
+                                        productId: getCurrProduct.id,
+                                        quantity: int.parse(
+                                            _quantityTextController.text));
+                                    },
                               // onTap: _isInCart
                               //     ? null
                               //     : () async {
@@ -318,7 +328,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               child: Padding(
                                   padding: const EdgeInsets.all(12.0),
                                   child: TextWidget(
-                                      text: 'Add to cart',
+                                      text: _isInCart ? 'In Cart' :'Add to cart',
                                       color: Colors.white,
                                       textSize: 18)),
                             ),
@@ -336,8 +346,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  Widget quantityControl(
-      {required Function fct, required IconData icon, required Color color}) {
+  Widget quantityControl({required Function fct, required IconData icon, required Color color}) {
     return Flexible(
       flex: 2,
       child: Material(

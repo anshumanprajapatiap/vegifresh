@@ -1,10 +1,14 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 import 'package:vegifresh/screen/innerScreen/productDetailScreen.dart';
 import 'package:vegifresh/utility/Utility.dart';
 import 'package:vegifresh/widget/textWidget.dart';
 
+import '../model/wishlistModel.dart';
+import '../provider/productProvider.dart';
+import '../provider/wishlistProvider.dart';
 import 'heartButtonWidget.dart';
 
 class WishlistWidget extends StatelessWidget {
@@ -12,16 +16,14 @@ class WishlistWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final productProvider = Provider.of<ProductsProvider>(context);
-    // final wishlistModel = Provider.of<WishlistModel>(context);
-    // final wishlistProvider = Provider.of<WishlistProvider>(context);
-    // final getCurrProduct =
-    // productProvider.findProdById(wishlistModel.productId);
-    // double usedPrice = getCurrProduct.isOnSale
-    //     ? getCurrProduct.salePrice
-    //     : getCurrProduct.price;
-    // bool? _isInWishlist =
-    // wishlistProvider.getWishlistItems.containsKey(getCurrProduct.id);
+    final productProvider = Provider.of<ProductsProvider>(context);
+    final wishlistModel = Provider.of<WishlistModel>(context);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    final getCurrProduct = productProvider.findProdById(wishlistModel.productId);
+    double usedPrice = getCurrProduct.isOnSale
+        ? getCurrProduct.salePrice
+        : getCurrProduct.price;
+    bool? _isInWishlist = wishlistProvider.getWishlistItems.containsKey(getCurrProduct.id);
     final Color color = Utility(context).color;
     Size size = Utility(context).getScreenSize;
     return Padding(
@@ -29,7 +31,7 @@ class WishlistWidget extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           Navigator.pushNamed(context, ProductDetailScreen.routeName,
-              arguments: '1');
+              arguments: getCurrProduct.id);
         },
         child: Container(
           height: size.height * 0.20,
@@ -47,7 +49,7 @@ class WishlistWidget extends StatelessWidget {
                   // width: size.width * 0.2,
                   height: size.width * 0.25,
                   child: FancyShimmerImage(
-                    imageUrl: 'https://static.libertyprim.com/files/familles/pomme-large.jpg?1569271834',
+                    imageUrl: getCurrProduct.imageUrl,
                     boxFit: BoxFit.fill,
                   ),
                 ),
@@ -62,21 +64,22 @@ class WishlistWidget extends StatelessWidget {
                       child: Row(
                         children: [
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                            },
                             icon: Icon(
                               IconlyLight.bag2,
                               color: color,
                             ),
                           ),
                           HeartBTN(
-                            productId: 'getCurrProduct.id',
-                            isInWishlist: false,
+                            productId: getCurrProduct.id,
+                            isInWishlist: _isInWishlist,
                           )
                         ],
                       ),
                     ),
                     TextWidget(
-                      text: 'getCurrProduct.title',
+                      text: getCurrProduct.title,
                       color: color,
                       textSize: 20.0,
                       maxLines: 2,
@@ -86,7 +89,7 @@ class WishlistWidget extends StatelessWidget {
                       height: 5,
                     ),
                     TextWidget(
-                      text: '\$2',
+                      text: '${usedPrice.toStringAsFixed(2)}',
                       color: color,
                       textSize: 18.0,
                       maxLines: 1,

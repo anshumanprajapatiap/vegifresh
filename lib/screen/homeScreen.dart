@@ -31,6 +31,9 @@ class HomeScreenState extends State<HomeScreen> {
     final themeState = utility.getTheme;
     final Color color = Utility(context).color;
     Size size = utility.getScreenSize;
+    final productsProvider = Provider.of<ProductsProvider>(context);
+    List<ProductModel> allProducts = productsProvider.getProducts;
+    List<ProductModel> productsOnSale = productsProvider.getOnSaleProducts;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -90,10 +93,13 @@ class HomeScreenState extends State<HomeScreen> {
                   child: SizedBox(
                     height: size.height*0.24,
                     child: ListView.builder(
-                        itemCount: 10,
+                        itemCount: productsOnSale.length < 10 ? productsOnSale.length : 10,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (ctx, index){
-                          return const OnSaleWidget();
+                          return ChangeNotifierProvider.value(
+                            value: productsOnSale[index],
+                            child: const OnSaleWidget(),
+                          );
                       }
                     ),
                   ),
@@ -132,8 +138,11 @@ class HomeScreenState extends State<HomeScreen> {
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 2,
               childAspectRatio: size.width/ (size.height*0.55),
-              children: List.generate(4, (index) {
-                  return FeedsWidget();
+              children: List.generate(allProducts.length < 4 ? allProducts.length : 4, (index) {
+                return ChangeNotifierProvider.value(
+                  value: allProducts[index],
+                  child: FeedsWidget(),
+                );
               }),
             )
           ],

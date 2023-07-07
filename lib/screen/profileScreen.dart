@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../provider/darkThemeProvider.dart';
 import '../utility/globalMethod.dart';
-import 'RecentlyViewedScreen.dart';
+import 'innerScreen/RecentlyViewedScreen.dart';
 import 'innerScreen/orderScreen.dart';
 import 'innerScreen/wishlistScreen.dart';
 

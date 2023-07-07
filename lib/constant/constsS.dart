@@ -1,3 +1,4 @@
+import '../model/productsModel.dart';
 
 class Constss {
   static final List<String> offerImages = [
@@ -16,5 +17,4 @@ class Constss {
     'assets/images/landing/store.jpg',
     'assets/images/landing/vergtablebg.jpg',
   ];
-
 }

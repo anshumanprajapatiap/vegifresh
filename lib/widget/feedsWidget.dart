@@ -1,6 +1,6 @@
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +18,12 @@ import '../utility/globalMethod.dart';
 import 'heartButtonWidget.dart';
 
 class FeedsWidget extends StatefulWidget {
-  const FeedsWidget({Key? key}) : super(key: key);
+
+
+  const FeedsWidget({
+    Key? key,
+    }) : super(key: key);
+
 
   @override
   State<FeedsWidget> createState() => _FeedsWidgetState();
@@ -42,11 +47,11 @@ class _FeedsWidgetState extends State<FeedsWidget> {
   Widget build(BuildContext context) {
     final Color color = Utility(context).color;
     Size size = Utility(context).getScreenSize;
-    //final productModel = Provider.of<ProductModel>(context);
-    // final cartProvider = Provider.of<CartProvider>(context);
-    // bool? _isInCart = cartProvider.getCartItems.containsKey(productModel.id);
-    // final wishlistProvider = Provider.of<WishlistProvider>(context);
-    // bool? _isInWishlist = wishlistProvider.getWishlistItems.containsKey(productModel.id);
+    final productModel = Provider.of<ProductModel>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
+    bool? _isInCart = cartProvider.getCartItems.containsKey(productModel.id);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    bool? _isInWishlist = wishlistProvider.getWishlistItems.containsKey(productModel.id);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
@@ -54,16 +59,13 @@ class _FeedsWidgetState extends State<FeedsWidget> {
         color: Theme.of(context).cardColor,
         child: InkWell(
           onTap: () {
-            // Navigator.pushNamed(context, ProductDetails.routeName,
-            //     arguments: productModel.id);
-            GlobalMethods.navigateTo(
-                ctx: context, routeName: ProductDetailScreen.routeName);
+            Navigator.pushNamed(context, ProductDetailScreen.routeName,
+                arguments: productModel.id);
           },
           borderRadius: BorderRadius.circular(12),
           child: Column(children: [
             FancyShimmerImage(
-              imageUrl: 'https://static.libertyprim.com/files/familles/pomme-large.jpg?1569271834',
-              //imageUrl: productModel.imageUrl,
+              imageUrl: productModel.imageUrl,
               height: size.width * 0.21,
               width: size.width * 0.2,
               boxFit: BoxFit.fill,
@@ -76,7 +78,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                   Flexible(
                     flex: 3,
                     child: TextWidget(
-                      text: 'productModel.title',
+                      text: productModel.title,
                       color: color,
                       maxLines: 1,
                       textSize: 18,
@@ -86,8 +88,8 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                   Flexible(
                       flex: 1,
                       child: HeartBTN(
-                        productId: '2',
-                        isInWishlist: true,
+                        productId: productModel.id,
+                        isInWishlist: _isInWishlist,
                       )),
                 ],
               ),
@@ -100,10 +102,10 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                   Flexible(
                     flex: 3,
                     child: PriceWidget(
-                      salePrice: 100,
-                      price: 120,
+                      salePrice: productModel.salePrice,
+                      price: productModel.price,
                       textPrice: _quantityTextController.text,
-                      isOnSale: false,
+                      isOnSale: productModel.isOnSale,
                     ),
                   ),
                   Flexible(
@@ -113,8 +115,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                           flex: 6,
                           child: FittedBox(
                             child: TextWidget(
-                              //text: productModel.isPiece ? 'Piece' : 'kg',
-                              text: 'KG',
+                              text: productModel.isPiece ? 'Piece' : 'kg',
                               color: color,
                               textSize: 20,
                               isTitle: true,
@@ -167,8 +168,14 @@ class _FeedsWidgetState extends State<FeedsWidget> {
             SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: (){},
-                // onPressed: _isInCart
+                onPressed: _isInCart
+                    ? null :
+                    () {
+                      cartProvider.addProductsToCart(
+                          productId: productModel.id,
+                          quantity: int.parse(_quantityTextController.text));
+                    },
+                    // onPressed: _isInCart
                 //     ? null
                 //     : () async {
                 //   // if (_isInCart) {
@@ -192,8 +199,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                   //     quantity: int.parse(_quantityTextController.text));
                 // },
                 child: TextWidget(
-                  //text: _isInCart ? 'In cart' : 'Add to cart',
-                  text: 'Add to cart',
+                  text: _isInCart ? 'In cart' : 'Add to cart',
                   maxLines: 1,
                   color: color,
                   textSize: 20,

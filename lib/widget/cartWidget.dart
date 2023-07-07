@@ -2,9 +2,14 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:vegifresh/utility/Utility.dart';
 import 'package:vegifresh/widget/textWidget.dart';
 
+import '../model/cartModel.dart';
+import '../provider/cartProvider.dart';
+import '../provider/productProvider.dart';
+import '../provider/wishlistProvider.dart';
 import '../screen/innerScreen/productDetailScreen.dart';
 import '../utility/globalMethod.dart';
 import 'heartButtonWidget.dart';
@@ -34,20 +39,20 @@ class _CartWidgetState extends State<CartWidget> {
   Widget build(BuildContext context) {
     final Color color = Utility(context).color;
     Size size = Utility(context).getScreenSize;
-    // final productProvider = Provider.of<ProductsProvider>(context);
-    // final cartModel = Provider.of<CartModel>(context);
-    // final getCurrProduct = productProvider.findProdById(cartModel.productId);
-    // double usedPrice = getCurrProduct.isOnSale
-    //     ? getCurrProduct.salePrice
-    //     : getCurrProduct.price;
-    // final cartProvider = Provider.of<CartProvider>(context);
-    // final wishlistProvider = Provider.of<WishlistProvider>(context);
-    // bool? _isInWishlist =
-    // wishlistProvider.getWishlistItems.containsKey(getCurrProduct.id);
+    final productProvider = Provider.of<ProductsProvider>(context);
+    final cartModel = Provider.of<CartModel>(context);
+    final getCurrProduct = productProvider.findProdById(cartModel.productId);
+    double usedPrice = getCurrProduct.isOnSale
+        ? getCurrProduct.salePrice
+        : getCurrProduct.price;
+    final cartProvider = Provider.of<CartProvider>(context);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    bool? _isInWishlist =
+    wishlistProvider.getWishlistItems.containsKey(getCurrProduct.id);
     return GestureDetector(
       onTap: () {
-        GlobalMethods.navigateTo(
-            ctx: context, routeName: ProductDetailScreen.routeName);
+        Navigator.pushNamed(context, ProductDetailScreen.routeName,
+            arguments: getCurrProduct.id);
       },
       child: Row(
         children: [
@@ -68,8 +73,7 @@ class _CartWidgetState extends State<CartWidget> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: FancyShimmerImage(
-                        //imageUrl: getCurrProduct.imageUrl,
-                        imageUrl: 'https://static.libertyprim.com/files/familles/pomme-large.jpg?1569271834',
+                        imageUrl: getCurrProduct.imageUrl,
                         boxFit: BoxFit.fill,
                       ),
                     ),
@@ -77,7 +81,7 @@ class _CartWidgetState extends State<CartWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         TextWidget(
-                          text: 'getCurrProduct.title',
+                          text: getCurrProduct.title,
                           color: color,
                           textSize: 20,
                           isTitle: true,
@@ -92,10 +96,11 @@ class _CartWidgetState extends State<CartWidget> {
                               _quantityController(
                                 fct: () {
                                   if (_quantityTextController.text == '1') {
+                                    print('will remove this item in future');
                                     return;
                                   } else {
-                                    // cartProvider.reduceQuantityByOne(
-                                    //     cartModel.productId);
+                                    cartProvider.reduceQuantityByOne(
+                                        cartModel.productId);
                                     setState(() {
                                       _quantityTextController.text = (int.parse(
                                           _quantityTextController
@@ -137,8 +142,8 @@ class _CartWidgetState extends State<CartWidget> {
                               ),
                               _quantityController(
                                 fct: () {
-                                  // cartProvider.increaseQuantityByOne(
-                                  //     cartModel.productId);
+                                  cartProvider.increaseQuantityByOne(
+                                      cartModel.productId);
                                   setState(() {
                                     _quantityTextController.text = (int.parse(
                                         _quantityTextController.text) +
@@ -161,6 +166,7 @@ class _CartWidgetState extends State<CartWidget> {
                         children: [
                           InkWell(
                             onTap: () async {
+                              cartProvider.removeOneItem(getCurrProduct.id);
                               // await cartProvider.removeOneItem(
                               //   cartId: cartModel.id,
                               //   productId: cartModel.productId,
@@ -178,12 +184,11 @@ class _CartWidgetState extends State<CartWidget> {
                             height: 5,
                           ),
                           HeartBTN(
-                            productId: 'getCurrProduct.id',
-                            isInWishlist: false,
+                            productId: getCurrProduct.id,
+                            isInWishlist: _isInWishlist,
                           ),
                           TextWidget(
-                            text:
-                            '100',
+                            text: '${usedPrice..toStringAsFixed(2)}',
                             color: color,
                             textSize: 18,
                             maxLines: 1,

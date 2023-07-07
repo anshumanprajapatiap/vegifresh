@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:vegifresh/utility/Utility.dart';
 import 'package:vegifresh/widget/emptyScreenWidget.dart';
 
+import '../../provider/wishlistProvider.dart';
 import '../../utility/globalMethod.dart';
 import '../../widget/backWidget.dart';
 import '../../widget/textWidget.dart';
@@ -18,17 +19,9 @@ class WishlistScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Utility(context).color;
     Size size = Utility(context).getScreenSize;
-    // final wishlistProvider = Provider.of<WishlistProvider>(context);
-    // final wishlistItemsList =
-    // wishlistProvider.getWishlistItems.values.toList().reversed.toList();
-    return false
-        ? const EmptyScreenWidget(
-      title: 'Your Wishlist Is Empty',
-      subtitle: 'Explore more and shortlist some items',
-      imagePath: 'assets/images/wishlist.png',
-      buttonText: 'Add a wish',
-    )
-        : Scaffold(
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    final wishlistItemsList = wishlistProvider.getWishlistItems.values.toList().reversed.toList();
+    return Scaffold(
         appBar: AppBar(
             centerTitle: true,
             leading: const BackWidget(),
@@ -36,36 +29,48 @@ class WishlistScreen extends StatelessWidget {
             elevation: 0,
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             title: TextWidget(
-              text: 'Wishlist ({wishlistItemsList.length})',
+              text: 'Wishlist (${wishlistItemsList.length})',
               color: color,
               isTitle: true,
               textSize: 22,
             ),
             actions: [
-              IconButton(
-                onPressed: () {
-                  GlobalMethods.warningDialog(
-                      title: 'Empty your wishlist?',
-                      subtitle: 'Are you sure?',
-                      fct: () async {
-                        // await wishlistProvider.clearOnlineWishlist();
-                        // wishlistProvider.clearLocalWishlist();
+              wishlistItemsList.isEmpty
+                  ? const Text('')
+                 : IconButton(
+                      onPressed: () {
+                        GlobalMethods.warningDialog(
+                            title: 'Empty your wishlist?',
+                            subtitle: 'Are you sure?',
+                            fct: () async {
+                              // await wishlistProvider.clearOnlineWishlist();
+                              wishlistProvider.clearLocalWishlist();
+                            },
+                            context: context);
                       },
-                      context: context);
-                },
-                icon: Icon(
-                  IconlyBroken.delete,
-                  color: color,
-                ),
-              ),
+                      icon: Icon(
+                      IconlyBroken.delete,
+                      color: color,
+                      ),
+                  )
             ]),
-        body: MasonryGridView.count(
-          itemCount: 4,
+        body: wishlistItemsList.isEmpty
+            ? const EmptyScreenWidget(
+              title: 'Your Wishlist Is Empty',
+              subtitle: 'Explore more and shortlist some items',
+              imagePath: 'assets/images/wishlist.png',
+              buttonText: 'Add a wish',
+            )
+            : MasonryGridView.count(
+          itemCount: wishlistItemsList.length,
           crossAxisCount: 2,
           // mainAxisSpacing: 16,
           // crossAxisSpacing: 20,
           itemBuilder: (context, index) {
-            return WishlistWidget();
+            return ChangeNotifierProvider.value(
+              value: wishlistItemsList[index],
+                child: WishlistWidget()
+            );
           },
         ));
   }

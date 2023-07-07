@@ -25,12 +25,14 @@ class _HeartBTNState extends State<HeartBTN> {
   bool loading = false;
   @override
   Widget build(BuildContext context) {
-    //final productProvider = Provider.of<ProductsProvider>(context);
-    //final getCurrProduct = productProvider.findProdById(widget.productId);
-    // final wishlistProvider = Provider.of<WishlistProvider>(context);
+    final productProvider = Provider.of<ProductsProvider>(context);
+    final getCurrProduct = productProvider.findProdById(widget.productId);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
     final Color color = Utility(context).color;
     return GestureDetector(
-      onTap: (){},
+      onTap: (){
+        wishlistProvider.addRemoveProductToWishlist(productId: widget.productId);
+      },
       // onTap: () async {
       //   setState(() {
       //     loading = true;

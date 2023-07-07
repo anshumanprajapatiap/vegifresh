@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vegifresh/constant/themeData.dart';
+import 'package:vegifresh/provider/cartProvider.dart';
 import 'package:vegifresh/provider/darkThemeProvider.dart';
-import 'package:vegifresh/screen/RecentlyViewedScreen.dart';
+import 'package:vegifresh/provider/productProvider.dart';
+import 'package:vegifresh/provider/viewedProductProvider.dart';
+import 'package:vegifresh/provider/wishlistProvider.dart';
+import 'package:vegifresh/screen/innerScreen/RecentlyViewedScreen.dart';
 import 'package:vegifresh/screen/authScreen/forgetPasswordScreen.dart';
 import 'package:vegifresh/screen/authScreen/registerNewUserScreen.dart';
 import 'package:vegifresh/screen/authScreen/singInScreen.dart';
 import 'package:vegifresh/screen/bottomBarScreen.dart';
+import 'package:vegifresh/screen/innerScreen/categoryScreen.dart';
 import 'package:vegifresh/screen/innerScreen/feedsScreen.dart';
 import 'package:vegifresh/screen/innerScreen/onSaleScreeen.dart';
 import 'package:vegifresh/screen/innerScreen/orderScreen.dart';
@@ -58,7 +63,11 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (_) {
           return themeChangeProvider;
-        })
+        }),
+        ChangeNotifierProvider(create: (_) => ProductsProvider()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => WishlistProvider()),
+        ChangeNotifierProvider(create: (_) => ViewedProdProvider())
       ],
       child: Consumer<DarkThemeProvider>(
         builder: (context, themeProvider, child){
@@ -82,7 +91,7 @@ class _MyAppState extends State<MyApp> {
               RegisterScreen.routeName: (ctx) => const RegisterScreen(),
               LoginScreen.routeName: (ctx) => const LoginScreen(),
               ForgetPasswordScreen.routeName: (ctx) => const ForgetPasswordScreen(),
-              // CategoryScreen.routeName: (ctx) => const CategoryScreen(),
+              CategoryScreen.routeName: (ctx) => const CategoryScreen(),
             },
           );
         },

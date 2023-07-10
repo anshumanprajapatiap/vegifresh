@@ -3,10 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vegifresh/screen/authScreen/registerNewUserScreen.dart';
+import 'package:vegifresh/screen/bottomBarScreen.dart';
 import 'package:vegifresh/widget/authButtonWidget.dart';
 import 'package:vegifresh/widget/googleButtonWidget.dart';
 
 import '../../constant/constsS.dart';
+import '../../constant/firebaseConstant.dart';
 import '../../utility/globalMethod.dart';
 import '../../widget/textWidget.dart';
 import '../loadingManager.dart';
@@ -45,14 +47,14 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
       try {
-        // await authInstance.signInWithEmailAndPassword(
-        //     email: _emailTextController.text.toLowerCase().trim(),
-        //     password: _passTextController.text.trim());
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(
-        //     builder: (context) => const FetchScreen(),
-        //   ),
-        // );
+        await authInstance.signInWithEmailAndPassword(
+            email: _emailTextController.text.toLowerCase().trim(),
+            password: _passTextController.text.trim());
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const BottomBarScreen(),
+          ),
+        );
         print('Succefully logged in');
       } on FirebaseException catch (error) {
         GlobalMethods.errorDialog(
@@ -265,11 +267,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 AuthButtonWidget(
                   fct: () {
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const FetchScreen(),
-                    //   ),
-                    // );
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const BottomBarScreen(),
+                      ),
+                    );
                   },
                   buttonText: 'Continue as a guest',
                   primary: Colors.black,

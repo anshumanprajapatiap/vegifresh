@@ -1,10 +1,12 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vegifresh/utility/Utility.dart';
 import 'package:vegifresh/widget/authButtonWidget.dart';
 
 import '../../constant/constsS.dart';
+import '../../constant/firebaseConstant.dart';
 import '../../utility/globalMethod.dart';
 import '../../widget/backWidget.dart';
 import '../../widget/textWidget.dart';
@@ -40,17 +42,17 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
         _isLoading = true;
       });
       try {
-        // await authInstance.sendPasswordResetEmail(
-        //     email: _emailTextController.text.toLowerCase());
-        // Fluttertoast.showToast(
-        //   msg: "An email has been sent to your email address",
-        //   toastLength: Toast.LENGTH_LONG,
-        //   gravity: ToastGravity.CENTER,
-        //   timeInSecForIosWeb: 1,
-        //   backgroundColor: Colors.grey.shade600,
-        //   textColor: Colors.white,
-        //   fontSize: 16.0,
-        // );
+        await authInstance.sendPasswordResetEmail(
+            email: _emailTextController.text.toLowerCase());
+        Fluttertoast.showToast(
+          msg: "An email has been sent to your email address",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.grey.shade600,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       } on FirebaseException catch (error) {
         GlobalMethods.errorDialog(
             subtitle: '${error.message}', context: context);

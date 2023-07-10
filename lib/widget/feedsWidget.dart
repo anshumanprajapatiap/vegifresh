@@ -1,5 +1,6 @@
 
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -171,6 +172,13 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                 onPressed: _isInCart
                     ? null :
                     () {
+                        final User? user = authInstance.currentUser;
+                        if (user == null) {
+                          GlobalMethods.errorDialog(
+                              subtitle: 'No user found, Please login first',
+                              context: context);
+                          return;
+                        }
                       cartProvider.addProductsToCart(
                           productId: productModel.id,
                           quantity: int.parse(_quantityTextController.text));

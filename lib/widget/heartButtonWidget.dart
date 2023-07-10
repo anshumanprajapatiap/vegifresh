@@ -31,6 +31,13 @@ class _HeartBTNState extends State<HeartBTN> {
     final Color color = Utility(context).color;
     return GestureDetector(
       onTap: (){
+        final User? user = authInstance.currentUser;
+        if (user == null) {
+          GlobalMethods.errorDialog(
+              subtitle: 'No user found, Please login first',
+              context: context);
+          return;
+        }
         wishlistProvider.addRemoveProductToWishlist(productId: widget.productId);
       },
       // onTap: () async {

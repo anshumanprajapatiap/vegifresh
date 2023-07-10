@@ -25,6 +25,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  bool _isAvaialbeAtSelectedLocation = false;
+
+
   @override
   Widget build(BuildContext context) {
     final Utility utility = Utility(context);
@@ -35,6 +38,31 @@ class HomeScreenState extends State<HomeScreen> {
     List<ProductModel> allProducts = productsProvider.getProducts;
     List<ProductModel> productsOnSale = productsProvider.getOnSaleProducts;
     return Scaffold(
+      appBar: AppBar(
+        title: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text('Deliver in ', style: TextStyle(fontSize: 15)),
+                  Text('13 Minutes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                ],
+              ),
+
+              Row(children: [
+                Text('HOME ', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text('- CH104', style: TextStyle(fontSize: 15)),
+                Icon(Icons.arrow_drop_down_rounded)
+              ],)
+
+            ],
+          ),
+        ),
+        actions: [
+          IconButton(onPressed: (){}, icon: Icon(Icons.account_circle))
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -78,6 +78,13 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                                 onTap: _isInCart
                                       ? null :
                                       () {
+                                          final User? user = authInstance.currentUser;
+                                          if (user == null) {
+                                            GlobalMethods.errorDialog(
+                                                subtitle: 'No user found, Please login first',
+                                                context: context);
+                                            return;
+                                          }
                                           cartProvider.addProductsToCart(
                                           productId: productModel.id,
                                           quantity: 1);

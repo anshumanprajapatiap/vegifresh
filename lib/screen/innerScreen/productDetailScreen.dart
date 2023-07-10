@@ -7,10 +7,12 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:vegifresh/utility/Utility.dart';
 
+import '../../constant/firebaseConstant.dart';
 import '../../provider/cartProvider.dart';
 import '../../provider/productProvider.dart';
 import '../../provider/viewedProductProvider.dart';
 import '../../provider/wishlistProvider.dart';
+import '../../utility/globalMethod.dart';
 import '../../widget/heartButtonWidget.dart';
 import '../../widget/textWidget.dart';
 
@@ -292,6 +294,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               onTap: _isInCart
                                   ? null
                                   : (){
+                                      final User? user = authInstance.currentUser;
+                                      if (user == null) {
+                                        GlobalMethods.errorDialog(
+                                            subtitle: 'No user found, Please login first',
+                                            context: context);
+                                        return;
+                                      }
                                       cartProvider.addProductsToCart(
                                         productId: getCurrProduct.id,
                                         quantity: int.parse(

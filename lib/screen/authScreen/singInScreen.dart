@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
             password: _passTextController.text.trim());
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const BottomBarScreen(),
+            builder: (context) => const FetchScreen(),
           ),
         );
         print('Succefully logged in');

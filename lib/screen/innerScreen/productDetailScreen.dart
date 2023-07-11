@@ -58,8 +58,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final viewedProdProvider = Provider.of<ViewedProdProvider>(context);
     return WillPopScope(
       onWillPop: () async {
-        print('itemp added to history ');
-        viewedProdProvider.addProductToHistory(productId: productId);
+        // print('itemp added to history ');
+        // viewedProdProvider.addProductToHistory(productId: productId);
         return true;
       },
       child: Scaffold(

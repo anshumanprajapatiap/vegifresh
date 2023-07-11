@@ -3,6 +3,7 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:provider/provider.dart';
 import 'package:vegifresh/constant/constsS.dart';
 import 'package:vegifresh/utility/Utility.dart';
+import 'package:vegifresh/widget/emptyProductWidget.dart';
 import 'package:vegifresh/widget/feedsWidget.dart';
 
 import '../../model/productsModel.dart';
@@ -20,6 +21,7 @@ class FeedsScreen extends StatefulWidget {
 class _FeedsScreenState extends State<FeedsScreen> {
   final TextEditingController? _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
+  List<ProductModel> listProductSearch = [];
   @override
   void dispose() {
     _searchTextController!.dispose();
@@ -27,12 +29,12 @@ class _FeedsScreenState extends State<FeedsScreen> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    //final productsProvider = Provider.of<ProductsProvider>(context, listen: false);
-    // productsProvider.fetchProducts();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   final productsProvider = Provider.of<ProductsProvider>(context, listen: false);
+  //   productsProvider.fetchProducts();
+  //   super.initState();
+  // }
   //List<ProductModel> allProducts= [];
   @override
   Widget build(BuildContext context) {
@@ -63,9 +65,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
                 focusNode: _searchTextFocusNode,
                 controller: _searchTextController,
                 onChanged: (valuee) {
-                  // setState(() {
-                  //   listProdcutSearch = productsProvider.searchQuery(valuee);
-                  // });
+                  setState(() {
+                    listProductSearch = productsProvider.searchQuery(valuee);
+                  });
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
@@ -94,10 +96,10 @@ class _FeedsScreenState extends State<FeedsScreen> {
               ),
             ),
           ),
-          // _searchTextController!.text.isNotEmpty && listProdcutSearch.isEmpty
-          //     ? const EmptyProdWidget(
-          //     text: 'No products found, please try another keyword')
-          //     :
+          _searchTextController!.text.isNotEmpty && listProductSearch.isEmpty
+              ? const EmptyProductWidget(
+              displayText: 'No products found, please try another keyword')
+              :
           GridView.count(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -105,23 +107,23 @@ class _FeedsScreenState extends State<FeedsScreen> {
             padding: EdgeInsets.zero,
             // crossAxisSpacing: 10,
             childAspectRatio: size.width / (size.height * 0.61),
-            // children: List.generate(
-            //     _searchTextController!.text.isNotEmpty
-            //         ? listProdcutSearch.length
-            //         : allProducts.length, (index) {
-            //   return ChangeNotifierProvider.value(
-            //     value: _searchTextController!.text.isNotEmpty
-            //         ? listProdcutSearch[index]
-            //         : allProducts[index],
-            //     child: const FeedsWidget(),
-            //   );
-            // }),
-            children: List.generate(allProducts.length, (index) {
+            children: List.generate(
+                _searchTextController!.text.isNotEmpty
+                    ? listProductSearch.length
+                    : allProducts.length, (index) {
               return ChangeNotifierProvider.value(
-                value: allProducts[index],
-                child: FeedsWidget(),
+                value: _searchTextController!.text.isNotEmpty
+                    ? listProductSearch[index]
+                    : allProducts[index],
+                child: const FeedsWidget(),
               );
             }),
+            // children: List.generate(allProducts.length, (index) {
+            //   return ChangeNotifierProvider.value(
+            //     value: allProducts[index],
+            //     child: FeedsWidget(),
+            //   );
+            // }),
           ),
         ]),
       ),

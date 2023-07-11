@@ -21,6 +21,7 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   final TextEditingController? _searchTextController = TextEditingController();
   final FocusNode _searchTextFocusNode = FocusNode();
+  List<ProductModel> listProductSearch = [];
   @override
   void dispose() {
     _searchTextController!.dispose();
@@ -67,9 +68,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                     focusNode: _searchTextFocusNode,
                     controller: _searchTextController,
                     onChanged: (valuee) {
-                      // setState(() {
-                      //   listProdcutSearch = productsProvider.searchQuery(valuee);
-                      // });
+                      setState(() {
+                        listProductSearch = productsProvider.searchQuery(valuee);
+                      });
                     },
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -98,10 +99,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   ),
                 ),
               ),
-              // _searchTextController!.text.isNotEmpty && listProdcutSearch.isEmpty
-              //     ? const EmptyProductWidget(
-              //     text: 'No products found, please try another keyword')
-              //     :
+              _searchTextController!.text.isNotEmpty && listProductSearch.isEmpty
+                  ? EmptyProductWidget(displayText: 'No products found, please try another keyword')
+                  :
               GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -109,23 +109,23 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 padding: EdgeInsets.zero,
                 // crossAxisSpacing: 10,
                 childAspectRatio: size.width / (size.height * 0.61),
-                // children: List.generate(
-                //     _searchTextController!.text.isNotEmpty
-                //         ? listProdcutSearch.length
-                //         : allProducts.length, (index) {
-                //   return ChangeNotifierProvider.value(
-                //     value: _searchTextController!.text.isNotEmpty
-                //         ? listProdcutSearch[index]
-                //         : allProducts[index],
-                //     child: const FeedsWidget(),
-                //   );
-                // }),
-                children: List.generate(productByCategory.length, (index) {
+                children: List.generate(
+                    _searchTextController!.text.isNotEmpty
+                        ? listProductSearch.length
+                        : productByCategory.length, (index) {
                   return ChangeNotifierProvider.value(
-                    value: productByCategory[index],
-                    child: FeedsWidget(),
+                    value: _searchTextController!.text.isNotEmpty
+                        ? listProductSearch[index]
+                        : productByCategory[index],
+                    child: const FeedsWidget(),
                   );
                 }),
+                // children: List.generate(productByCategory.length, (index) {
+                //   return ChangeNotifierProvider.value(
+                //     value: productByCategory[index],
+                //     child: FeedsWidget(),
+                //   );
+                // }),
               ),
             ]),
           ),

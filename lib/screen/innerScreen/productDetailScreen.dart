@@ -293,7 +293,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             child: InkWell(
                               onTap: _isInCart
                                   ? null
-                                  : (){
+                                  : () async{
                                       final User? user = authInstance.currentUser;
                                       if (user == null) {
                                         GlobalMethods.errorDialog(
@@ -301,10 +301,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                             context: context);
                                         return;
                                       }
-                                      cartProvider.addProductsToCart(
-                                        productId: getCurrProduct.id,
-                                        quantity: int.parse(
-                                            _quantityTextController.text));
+                                      await GlobalMethods.addToCart(
+                                          productId: getCurrProduct.id,
+                                          quantity: 1,
+                                          context: context);
+                                      await cartProvider.fetchCart();
+                                      // cartProvider.addProductsToCart(
+                                      //   productId: getCurrProduct.id,
+                                      //   quantity: int.parse(
+                                      //       _quantityTextController.text));
                                     },
                               // onTap: _isInCart
                               //     ? null

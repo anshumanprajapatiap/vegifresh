@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:vegifresh/constant/themeData.dart';
+import 'package:vegifresh/fetchScreen.dart';
 import 'package:vegifresh/provider/cartProvider.dart';
 import 'package:vegifresh/provider/darkThemeProvider.dart';
+import 'package:vegifresh/provider/orderProvider.dart';
 import 'package:vegifresh/provider/productProvider.dart';
 import 'package:vegifresh/provider/viewedProductProvider.dart';
 import 'package:vegifresh/provider/wishlistProvider.dart';
@@ -66,9 +68,9 @@ class _MyAppState extends State<MyApp> {
       future: _firebaseinitialization,
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting){
-          return const MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator(),),),);
+          return const MaterialApp(debugShowCheckedModeBanner: false, home: Scaffold(body: Center(child: CircularProgressIndicator(),),),);
         } else if(snapshot.hasError){
-          return const MaterialApp(home: Scaffold(body: Center(child: Text('An Error occured'),),),);
+          return const MaterialApp(debugShowCheckedModeBanner: false, home: Scaffold(body: Center(child: Text('An Error occured'),),),);
         // } else if(snapshot.hasData){
         //   return const MaterialApp(home: LoginScreen());
         }
@@ -80,7 +82,8 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(create: (_) => ProductsProvider()),
             ChangeNotifierProvider(create: (_) => CartProvider()),
             ChangeNotifierProvider(create: (_) => WishlistProvider()),
-            ChangeNotifierProvider(create: (_) => ViewedProdProvider())
+            ChangeNotifierProvider(create: (_) => ViewedProdProvider()),
+            ChangeNotifierProvider(create: (_) => OrdersProvider())
           ],
           child: Consumer<DarkThemeProvider>(
             builder: (context, themeProvider, child){
@@ -93,7 +96,7 @@ class _MyAppState extends State<MyApp> {
                 //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.greenAccent),
                 //   useMaterial3: _useMaterial3,
                 // ),
-                home: const BottomBarScreen(),
+                home: const FetchScreen(),
                 routes: {
                   OnSaleScreen.routeName: (ctx) => const OnSaleScreen(),
                   FeedsScreen.routeName: (ctx) => const FeedsScreen(),

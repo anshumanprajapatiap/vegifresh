@@ -45,7 +45,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
       bottomNavigationBar: BottomNavigationBar(
         elevation: 5,
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         currentIndex: _selectedIndex,
         onTap: _selectedPage,
         selectedItemColor: Theme.of(context).cardColor,

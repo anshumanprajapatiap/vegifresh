@@ -166,12 +166,12 @@ class _CartWidgetState extends State<CartWidget> {
                         children: [
                           InkWell(
                             onTap: () async {
-                              cartProvider.removeOneItem(getCurrProduct.id);
-                              // await cartProvider.removeOneItem(
-                              //   cartId: cartModel.id,
-                              //   productId: cartModel.productId,
-                              //   quantity: cartModel.quantity,
-                              // );
+                              //cartProvider.removeOneItem(getCurrProduct.id);
+                              await cartProvider.removeOneItem(
+                                cartId: cartModel.id,
+                                productId: cartModel.productId,
+                                quantity: cartModel.quantity,
+                              );
 
                             },
                             child: const Icon(
@@ -188,7 +188,7 @@ class _CartWidgetState extends State<CartWidget> {
                             isInWishlist: _isInWishlist,
                           ),
                           TextWidget(
-                            text: '${usedPrice..toStringAsFixed(2)}',
+                            text: '${ (usedPrice * int.parse(_quantityTextController.text)).toStringAsFixed(2)}',
                             color: color,
                             textSize: 18,
                             maxLines: 1,

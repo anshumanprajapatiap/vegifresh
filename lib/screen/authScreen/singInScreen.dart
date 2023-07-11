@@ -2,6 +2,7 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:vegifresh/fetchScreen.dart';
 import 'package:vegifresh/screen/authScreen/registerNewUserScreen.dart';
 import 'package:vegifresh/screen/bottomBarScreen.dart';
 import 'package:vegifresh/widget/authButtonWidget.dart';
@@ -269,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   fct: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
-                        builder: (context) => const BottomBarScreen(),
+                        builder: (context) => const FetchScreen(),
                       ),
                     );
                   },

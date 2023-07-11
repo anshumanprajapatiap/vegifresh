@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vegifresh/fetchScreen.dart';
 import 'package:vegifresh/screen/bottomBarScreen.dart';
 import 'package:vegifresh/widget/textWidget.dart';
 
@@ -41,7 +42,7 @@ class GoogleButtonWidget extends StatelessWidget {
           }
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => const BottomBarScreen(),
+              builder: (context) => const FetchScreen(),
             ),
           );
         } on FirebaseException catch (error) {

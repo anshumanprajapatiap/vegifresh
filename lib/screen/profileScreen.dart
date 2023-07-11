@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: user!=null ? Center(
 
           child: Column(
@@ -45,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 text: TextSpan(
                   text: 'Hi,  ',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.background,
+                    color: Theme.of(context).canvasColor,
                     fontSize: 27,
                     fontWeight: FontWeight.bold,
                   ),
@@ -68,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Text(
                 _email ?? '',
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.background,
+                  // color: Theme.of(context).colorScheme.background,
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                 ),

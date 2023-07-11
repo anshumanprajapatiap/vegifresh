@@ -30,57 +30,47 @@ class _HeartBTNState extends State<HeartBTN> {
     final wishlistProvider = Provider.of<WishlistProvider>(context);
     final Color color = Utility(context).color;
     return GestureDetector(
-      onTap: (){
-        final User? user = authInstance.currentUser;
-        if (user == null) {
-          GlobalMethods.errorDialog(
-              subtitle: 'No user found, Please login first',
-              context: context);
-          return;
+      onTap: () async {
+        setState(() {
+          loading = true;
+        });
+        try {
+          final User? user = authInstance.currentUser;
+
+          if (user == null) {
+            GlobalMethods.errorDialog(
+                subtitle: 'No user found, Please login first',
+                context: context);
+            return;
+          }
+          if (widget.isInWishlist == false && widget.isInWishlist != null) {
+            await GlobalMethods.addToWishlist(
+                productId: widget.productId, context: context);
+          } else {
+            await wishlistProvider.removeOneItem(
+                wishlistId:
+                wishlistProvider.getWishlistItems[getCurrProduct.id]!.id,
+                productId: widget.productId);
+          }
+          await wishlistProvider.fetchWishlist();
+          setState(() {
+            loading = false;
+          });
+        } catch (error) {
+          GlobalMethods.errorDialog(subtitle: '$error', context: context);
+        } finally {
+          setState(() {
+            loading = false;
+          });
         }
-        wishlistProvider.addRemoveProductToWishlist(productId: widget.productId);
+        // print('user id is ${user.uid}');
+        // wishlistProvider.addRemoveProductToWishlist(productId: productId);
       },
-      // onTap: () async {
-      //   setState(() {
-      //     loading = true;
-      //   });
-      //   try {
-      //     final User? user = authInstance.currentUser;
-      //
-      //     if (user == null) {
-      //       GlobalMethods.errorDialog(
-      //           subtitle: 'No user found, Please login first',
-      //           context: context);
-      //       return;
-      //     }
-      //     if (widget.isInWishlist == false && widget.isInWishlist != null) {
-      //       await GlobalMethods.addToWishlist(
-      //           productId: widget.productId, context: context);
-      //     } else {
-      //       await wishlistProvider.removeOneItem(
-      //           wishlistId:
-      //           wishlistProvider.getWishlistItems[getCurrProduct.id]!.id,
-      //           productId: widget.productId);
-      //     }
-      //     await wishlistProvider.fetchWishlist();
-      //     setState(() {
-      //       loading = false;
-      //     });
-      //   } catch (error) {
-      //     GlobalMethods.errorDialog(subtitle: '$error', context: context);
-      //   } finally {
-      //     setState(() {
-      //       loading = false;
-      //     });
-      //   }
-      //   // print('user id is ${user.uid}');
-      //   // wishlistProvider.addRemoveProductToWishlist(productId: productId);
-      // },
       child: loading
           ? const Padding(
         padding: EdgeInsets.all(8.0),
         child: SizedBox(
-            height: 15, width: 15, child: CircularProgressIndicator()),
+            height: 10, width: 10, child: CircularProgressIndicator()),
       )
           : Icon(
         widget.isInWishlist != null && widget.isInWishlist == true
@@ -88,7 +78,7 @@ class _HeartBTNState extends State<HeartBTN> {
             : IconlyLight.heart,
         size: 22,
         color: widget.isInWishlist != null && widget.isInWishlist == true
-            ? Colors.red
+            ? Colors.green
             : color,
       ),
     );

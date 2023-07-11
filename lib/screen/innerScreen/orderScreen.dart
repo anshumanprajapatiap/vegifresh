@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:provider/provider.dart';
 import 'package:vegifresh/utility/Utility.dart';
 
+import '../../provider/orderProvider.dart';
 import '../../widget/backWidget.dart';
 import '../../widget/orderWidget.dart';
 import '../../widget/textWidget.dart';
@@ -19,16 +21,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
   @override
   Widget build(BuildContext context) {
     final Color color = Utility(context).color;
-    // Size size = Utils(context).getScreenSize;
-    // final ordersProvider = Provider.of<OrdersProvider>(context);
-    // final ordersList = ordersProvider.getOrders;
+    Size size = Utility(context).getScreenSize;
+    final ordersProvider = Provider.of<OrdersProvider>(context);
+    final ordersList = ordersProvider.getOrders;
     return Scaffold(
       appBar: AppBar(
         leading: const BackWidget(),
         elevation: 0,
         centerTitle: false,
         title: TextWidget(
-          text: 'Your orders ({ordersList.length})',
+          text: 'Your orders (${ordersList.length})',
           color: color,
           textSize: 24.0,
           isTitle: true,
@@ -38,13 +40,16 @@ class _OrdersScreenState extends State<OrdersScreen> {
             .withOpacity(0.9),
       ),
       body: ListView.separated(
-        itemCount: 4,
+        itemCount: ordersList.length,
         itemBuilder: (ctx, index) {
           return Padding(
             padding: const EdgeInsets.symmetric(
                 horizontal: 2,
                 vertical: 6,),
-              child: OrderWidget(),
+              child: ChangeNotifierProvider.value(
+                  value: ordersList[index],
+                  child: OrderWidget()
+              ),
             );
         },
         separatorBuilder: (BuildContext context, int index) {

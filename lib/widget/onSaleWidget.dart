@@ -59,8 +59,8 @@ class _OnSaleWidgetState extends State<OnSaleWidget> {
                     children: [
                       FancyShimmerImage(
                         imageUrl: productModel.imageUrl,
-                        height: size.width * 0.22,
-                        width: size.width * 0.22,
+                        height: size.width * 0.15,
+                        width: size.width * 0.15,
                         boxFit: BoxFit.fill,
                       ),
                       Column(

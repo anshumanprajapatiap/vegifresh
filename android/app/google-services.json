@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "209763699835",
+    "project_id": "vegifreshbyminglebytes",
+    "storage_bucket": "vegifreshbyminglebytes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209763699835:android:4bb4c3d5f50cb70788e6de",
+        "android_client_info": {
+          "package_name": "com.minglebytes.vegifresh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209763699835-7p0bm6e20ddp6559h4i0picaen0ha7ua.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minglebytes.vegifresh",
+            "certificate_hash": "85fb0e2973cbaff4031ab3397caa9c1273c16775"
+          }
+        },
+        {
+          "client_id": "209763699835-e9sqij5md6jtk9vko5t0q78u438fka3b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-S488tvDxJweYtcAW4dX50agZfk80764"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209763699835-e9sqij5md6jtk9vko5t0q78u438fka3b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "209763699835-h6816aafigbl5k8mg1sed3tk92rqqq5e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.minglebytes.vegifresh"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
